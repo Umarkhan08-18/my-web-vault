@@ -1,0 +1,77 @@
+{
+  "app": "My Web Vault",
+  "version": 1,
+  "exportedAt": "2026-10-07T09:00:00+00:00",
+  "note": "7 sites collected by the user, ready to import (Dashboard → Import).",
+  "categories": [
+    "AI",
+    "Marketing",
+    "Research",
+    "Tools"
+  ],
+  "websites": [
+    {
+      "name": "Emailnator",
+      "url": "https://www.emailnator.com/",
+      "category": "Tools",
+      "description": "Generates a real, working @gmail.com disposable address in one click — no signup, auto-deletes in 24h, and is not blocked by temp-mail filters.",
+      "favorite": false,
+      "createdAt": 1791363600000,
+      "updatedAt": 1791363600000
+    },
+    {
+      "name": "LCN",
+      "url": "https://www.lcn.com/",
+      "category": "Tools",
+      "description": "UK domain registrar and host since 2000: domains, web hosting, managed WordPress, email hosting, SSL and an AI website builder.",
+      "favorite": false,
+      "createdAt": 1791363000000,
+      "updatedAt": 1791363000000
+    },
+    {
+      "name": "AutoAE",
+      "url": "https://autoae.online/",
+      "category": "AI",
+      "description": "AI motion-graphics agent — give it an idea, script or image and it renders ready-to-use motion graphics for launches, reels, explainers and ads.",
+      "favorite": false,
+      "createdAt": 1791362400000,
+      "updatedAt": 1791362400000
+    },
+    {
+      "name": "Znole Technology",
+      "url": "https://www.znoletechnology.com/",
+      "category": "Marketing",
+      "description": "Verified lead platform for Indian freelancers: audited business leads with weakness reports, plus ID-verified profiles and trust scores.",
+      "favorite": false,
+      "createdAt": 1791361800000,
+      "updatedAt": 1791361800000
+    },
+    {
+      "name": "Pinokio",
+      "url": "https://pinokio.co/",
+      "category": "AI",
+      "description": "One-click installer and launcher for local AI apps — FaceFusion, XTTS, MiniMax and more — with updates straight from app maintainers.",
+      "favorite": false,
+      "createdAt": 1791361200000,
+      "updatedAt": 1791361200000
+    },
+    {
+      "name": "TextMatchCut",
+      "url": "https://www.textmatchcut.app/",
+      "category": "Tools",
+      "description": "Free browser video tool: type a phrase, highlight a word, download an HD match-cut MP4. No signup, no watermark, exports for TikTok, Reels and Shorts.",
+      "favorite": false,
+      "createdAt": 1791360600000,
+      "updatedAt": 1791360600000
+    },
+    {
+      "name": "FreeStudy",
+      "url": "https://freestudy-website.vercel.app/home",
+      "category": "Research",
+      "description": "Free study site: full-syllabus preparation, MCQ and subjective tests, daily tests, monthly competitions, leaderboard and 3D simulations.",
+      "favorite": false,
+      "createdAt": 1791360000000,
+      "updatedAt": 1791360000000
+    }
+  ]
+}

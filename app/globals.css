@@ -1,0 +1,591 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --ring: 124 58 237;
+    --pad: clamp(20px, 3.4vw, 56px);
+
+    /* --- shadcn/ui tokens -------------------------------------------------
+       HSL triplets so `hsl(var(--x) / <alpha-value>)` works in Tailwind 3.
+       Tuned to this app's violet brand rather than shadcn's neutral default. */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 4%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 42%;
+    --accent: 262 83% 96%;
+    --accent-foreground: 262 60% 30%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --violet-brand: #7c3aed;
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  /* The app ships light-only; these keep the shadcn tokens complete. */
+  .dark {
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 6%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 6%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 263 85% 66%;
+    --primary-foreground: 240 10% 6%;
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 240 4% 16%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+    --ring: 263 85% 66%;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+  }
+
+  body {
+    @apply bg-white text-ink;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  ::selection {
+    background: rgba(124, 58, 237, 0.18);
+    color: #0a0a0b;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(124, 58, 237, 0.75);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+}
+
+@layer components {
+  /* ---------- Surfaces ---------- */
+  .glass {
+    @apply border border-white/70 bg-white/60 shadow-glass backdrop-blur-xl backdrop-saturate-150;
+  }
+
+  .glass-strong {
+    @apply border border-white/80 bg-white/80 shadow-glass backdrop-blur-2xl backdrop-saturate-150;
+  }
+
+  .card-surface {
+    @apply rounded-3xl border border-black/[0.06] bg-white shadow-soft;
+  }
+
+  /* ---------- Backgrounds ---------- */
+  .dot-grid {
+    background-image: radial-gradient(rgba(10, 10, 11, 0.11) 1px, transparent 1px);
+    background-size: 22px 22px;
+    background-position: -11px -11px;
+  }
+
+  .dot-grid-fade {
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 40%, transparent 100%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 40%, transparent 100%);
+  }
+
+  .rainbow-text {
+    background-image: linear-gradient(
+      100deg,
+      #7c3aed 0%,
+      #2563eb 22%,
+      #22d3ee 42%,
+      #a3e635 60%,
+      #f472b6 80%,
+      #7c3aed 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .rainbow-stripe {
+    background-image: linear-gradient(90deg, #7c3aed, #2563eb, #22d3ee, #a3e635, #f472b6, #7c3aed);
+    background-size: 300% 100%;
+  }
+
+  .accent-stripe {
+    @apply h-[3px] w-full rainbow-stripe;
+    animation: stripe-slide 12s linear infinite;
+  }
+
+  /* ---------- Glows ---------- */
+  .orb {
+    @apply pointer-events-none absolute rounded-full blur-3xl;
+  }
+
+  .flash-core {
+    @apply pointer-events-none absolute inset-0 rounded-full;
+    background: conic-gradient(from 0deg, #7c3aed, #22d3ee, #a3e635, #f472b6, #7c3aed);
+    animation: spin-slow 8s linear infinite;
+  }
+
+  /* ---------- Hover shine ---------- */
+  .sheen {
+    @apply pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit];
+  }
+
+  .sheen::after {
+    content: '';
+    @apply absolute inset-y-0 -left-1/3 w-1/3;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+  }
+
+  .group:hover .sheen::after {
+    animation: sheen 0.9s ease-out;
+  }
+
+  /* ---------- Rainbow hover ring ---------- */
+  .rainbow-ring {
+    @apply pointer-events-none absolute -inset-[1px] rounded-[inherit] opacity-0 transition-opacity duration-300;
+    background: linear-gradient(120deg, #7c3aed, #2563eb, #22d3ee, #a3e635, #f472b6);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    padding: 1.5px;
+  }
+
+  .group:hover .rainbow-ring {
+    @apply opacity-100;
+  }
+
+  /* ---------- Controls ---------- */
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-2xl text-sm font-medium
+      transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-ink px-4 py-2.5 text-white shadow-soft hover:bg-ink-soft hover:shadow-lift;
+  }
+
+  .btn-gradient {
+    @apply btn relative overflow-hidden bg-gradient-to-r from-violet-brand via-violet-bright to-blue-icon
+      px-4 py-2.5 text-white shadow-soft;
+  }
+
+  /* Controlled neon: a violet halo with a cool cyan edge, only on interaction */
+  .btn-gradient:hover {
+    box-shadow:
+      0 18px 40px -16px rgba(124, 58, 237, 0.55),
+      0 0 26px -10px rgba(34, 211, 238, 0.65);
+  }
+
+  .neon-edge {
+    box-shadow:
+      0 0 0 1px rgba(34, 211, 238, 0.35),
+      0 0 26px -8px rgba(34, 211, 238, 0.75);
+  }
+
+  .btn-ghost {
+    @apply btn border border-black/[0.08] bg-white px-4 py-2.5 text-ink hover:border-black/20 hover:bg-black/[0.02];
+  }
+
+  .btn-icon {
+    @apply btn h-9 w-9 border border-black/[0.06] bg-white text-ink-muted hover:border-black/15
+      hover:text-ink hover:shadow-soft;
+  }
+
+  .field {
+    @apply w-full rounded-2xl border border-black/[0.08] bg-white px-4 py-3 text-[15px] text-ink
+      placeholder:text-black/30 transition-all duration-200
+      hover:border-black/[0.14] focus:border-violet-brand/60 focus:outline-none
+      focus:ring-4 focus:ring-violet-brand/10;
+  }
+
+  .field-error {
+    @apply border-rose-400/70 focus:border-rose-500 focus:ring-rose-500/10;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-medium
+      transition-all duration-200;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide;
+  }
+
+  .section-shell {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-muted;
+  }
+
+  .link-underline {
+    @apply relative after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-current
+      after:transition-all after:duration-300 hover:after:w-full;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .mask-fade-r {
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent 100%);
+    mask-image: linear-gradient(90deg, #000 85%, transparent 100%);
+  }
+}
+
+@keyframes stripe-slide {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+/* ==========================================================================
+   MOTION LAYER — the "liquid" system
+   Everything here is decorative and non-blocking: no element is hidden from
+   the layout, every reveal has a static end state, and all of it collapses
+   under prefers-reduced-motion.
+   ========================================================================== */
+
+/* ---------- film grain + vignette: the page reads as a surface ---------- */
+#grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+}
+#vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+  background: radial-gradient(118% 88% at 50% 34%, transparent 54%, rgba(10, 10, 11, 0.055) 100%);
+}
+
+/* ---------- scroll reveal ---------------------------------------------- */
+.js-motion [data-rv] {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+.js-motion [data-rv='up'] {
+  transform: translate3d(0, 24px, 0);
+}
+.js-motion [data-rv='left'] {
+  transform: translate3d(-26px, 0, 0);
+}
+.js-motion [data-rv='right'] {
+  transform: translate3d(26px, 0, 0);
+}
+.js-motion [data-rv='scale'] {
+  transform: scale(0.97);
+}
+.js-motion [data-rv].rv-in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.9s var(--ease-out),
+    transform 1.05s var(--ease-out);
+}
+
+/* a line that uncovers from below its own mask */
+.mask-line {
+  display: block;
+  overflow: hidden;
+}
+.mask-line > span {
+  display: block;
+  transition: transform 1.05s var(--ease-out);
+}
+.js-motion .mask-line > span {
+  transform: translate3d(0, 112%, 0);
+}
+.js-motion .rv-in .mask-line > span,
+.js-motion .mask-line.rv-in > span {
+  transform: none;
+}
+
+/* word-by-word: display type arrives at reading pace, not all at once */
+.word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+.word {
+  display: inline-block;
+  will-change: transform, opacity;
+  transition:
+    transform 0.82s var(--ease-out),
+    opacity 0.5s var(--ease-out);
+  transition-delay: var(--word-delay, 0ms);
+}
+.js-motion .word {
+  opacity: 0;
+  transform: translate3d(0, 112%, 0);
+}
+.js-motion .word-reveal .word,
+.js-motion .word-reveal.rv-in .word {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- pointer parallax + magnetic controls ----------------------- */
+/* --px/--py are written by MotionLayer; the element keeps its own animation
+   on the parent so the two never fight over `transform`. */
+[data-parallax] {
+  transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-magnet] {
+  transform: translate3d(var(--gx, 0px), var(--gy, 0px), 0);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- cursor spotlight on cards ---------------------------------- */
+.spot {
+  position: relative;
+  isolation: isolate;
+}
+.spot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s var(--ease);
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(124, 58, 237, 0.10),
+    rgba(34, 211, 238, 0.07) 42%,
+    transparent 72%
+  );
+}
+.spot:hover::before {
+  opacity: 1;
+}
+
+/* ---------- liquid surface: a light source sitting on the glass --------- */
+.liquid {
+  position: relative;
+  overflow: hidden;
+}
+.liquid::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 46%);
+  mix-blend-mode: overlay;
+  opacity: 0.75;
+}
+
+/* ---------- custom cursor ---------------------------------------------- */
+.cur-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 120; /* above the assistant panel so the ring never disappears */
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border: 1px solid rgba(10, 10, 11, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    width 0.35s var(--ease-out),
+    height 0.35s var(--ease-out),
+    margin 0.35s var(--ease-out),
+    background 0.35s var(--ease),
+    border-color 0.35s var(--ease),
+    opacity 0.3s;
+}
+.cur-dot.act {
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  background: rgba(124, 58, 237, 0.07);
+  border-color: rgba(124, 58, 237, 0.45);
+}
+@media (hover: hover) and (pointer: fine) {
+  .cur-dot {
+    opacity: 1;
+  }
+}
+
+/* ---------- section rail ----------------------------------------------- */
+.rail {
+  position: fixed;
+  right: calc(var(--pad) - 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 45;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+/* display is left to the utilities (`hidden xl:flex`) — a display here would
+   sit after @tailwind utilities in the sheet and out-specify them. */
+.rail button {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+}
+.rail i {
+  display: block;
+  width: 12px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: rgba(10, 10, 11, 0.2);
+  transition: 0.45s var(--ease-out);
+}
+.rail button:hover i {
+  width: 22px;
+  background: rgba(10, 10, 11, 0.55);
+}
+.rail button.on i {
+  width: 22px;
+  background: var(--violet-brand);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.6);
+}
+
+/* ---------- nav: sticky wash, hide-on-scroll, read progress ------------- */
+.nav-shell {
+  transition: transform 0.55s var(--ease);
+}
+.nav-shell.hide {
+  transform: translate3d(0, -101%, 0);
+}
+.nav-progress {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: var(--sp, 0%);
+  background: linear-gradient(90deg, #7c3aed, #2563eb, #22d3ee, #a3e635);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.nav-shell.stuck .nav-progress {
+  opacity: 1;
+}
+
+/* ---------- float + hover choreography --------------------------------- */
+@keyframes float-a {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -9px, 0); }
+}
+@keyframes float-b {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%      { transform: translate3d(0, -14px, 0) rotate(-0.6deg); }
+}
+@keyframes float-c {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%      { transform: translate3d(4px, -7px, 0) rotate(0.8deg); }
+}
+.float-a { animation: float-a 7s ease-in-out infinite; }
+.float-b { animation: float-b 9s ease-in-out infinite; }
+.float-c { animation: float-c 11s ease-in-out infinite; }
+.float-pause:hover { animation-play-state: paused; }
+
+/* ---------- liquid button: light travels across the surface ------------- */
+.btn-liquid {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-liquid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 55%);
+  opacity: 0;
+  transform: translateX(-30%);
+  transition: opacity 0.5s var(--ease), transform 0.7s var(--ease-out);
+}
+.btn-liquid:hover::before {
+  opacity: 1;
+  transform: translateX(30%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Motion off must never mean content missing. These repeat the .js-motion
+     prefix so they out-specify the rules that hide things in the first place
+     rather than relying on !important alone. */
+  .js-motion [data-rv],
+  [data-rv] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .js-motion .mask-line > span,
+  .mask-line > span,
+  .js-motion .word,
+  .word {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  [data-parallax],
+  [data-magnet] {
+    transform: none !important;
+  }
+  .cur-dot {
+    display: none;
+  }
+}
